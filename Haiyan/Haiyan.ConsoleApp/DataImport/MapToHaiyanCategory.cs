@@ -13,6 +13,12 @@ namespace Haiyan.ConsoleApp.DataImport
 
             foreach(var item in modelObject)
             {
+              
+                if (BuildingElementsToIgnore.WillBeIgnored(item))
+                {
+                    continue;
+                }
+
                 var buildingElement = new HaiyanBuildingElement();
                 buildingElement.Name = item.Name;
                 buildingElement.Description = item.Description;
@@ -25,11 +31,6 @@ namespace Haiyan.ConsoleApp.DataImport
                 buildingElement.BoverketProductCategory = null;
 
                 buildingElement.Material = MaterialParser.Parse(item);
-
-                if (BuildingElementsToIgnore.WillBeIgnored(item))
-                {
-                    continue;
-                }
 
                 buildingElements.Add(buildingElement);
             }

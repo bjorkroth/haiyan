@@ -13,10 +13,25 @@ namespace Haiyan.ConsoleApp.DataImport
             {
                 "HÅL",
                 "DIMPOINT_E",
-                "CSTAIRSTEPNUM"
+                "CSTAIRSTEPNUM",
+                "CSTAIRNUM_1",
+                "CSTAIRNUM_2",
+                "CSTAIRNUM_3",
+                "CSTAIRNUM_4",
+                "CSTAIRNUM_5",
+                "CSTAIRNUM_6",
+                "CSTAIRNUM_7",
+                "CSTAIRNUM_8",
+                "CSTAIRNUM_9",
+                "CSTAIRNUM_10"
             };
 
             if (listOfIgnoredNames.Contains(product.Name.ToString().ToUpper()))
+            {
+                ignored = true;
+            }
+
+            if (product.Name.Value.ToString().Contains("Provision"))
             {
                 ignored = true;
             }

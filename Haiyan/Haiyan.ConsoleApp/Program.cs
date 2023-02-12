@@ -35,14 +35,19 @@ namespace Haiyan.ConsoleApp
                     .ToList();
 
                 var walls = new ModelInstanceQuery(model).OfType<IIfcWall>();
-                var columns = new ModelInstanceQuery(model).OfType<IIfcColumn>();
-                var slabs = new ModelInstanceQuery(model).OfType<IIfcSlab>();
-                var beams = new ModelInstanceQuery(model).OfType<IIfcBeam>();
-
                 var mappedWalls = MapToHaiyanCategory.Map(walls);
+
+                var columns = new ModelInstanceQuery(model).OfType<IIfcColumn>();
                 var mappedColumns = MapToHaiyanCategory.Map(columns);
+
+                var slabs = new ModelInstanceQuery(model).OfType<IIfcSlab>();
                 var mappedSlabs = MapToHaiyanCategory.Map(slabs);
-                var mapsBeams = MapToHaiyanCategory.Map(beams);
+
+                var beams = new ModelInstanceQuery(model).OfType<IIfcBeam>();
+                var mappedBeams = MapToHaiyanCategory.Map(beams);
+
+                var proxy = new ModelInstanceQuery(model).OfType<IIfcBuildingElementProxy>();
+                var mappedProxy = MapToHaiyanCategory.Map(proxy);
 
                 var totalVolume = 0.0;
 
