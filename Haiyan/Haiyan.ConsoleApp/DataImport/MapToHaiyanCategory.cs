@@ -33,7 +33,7 @@ namespace Haiyan.ConsoleApp.DataImport
 
                 buildingElement.Material = MaterialParser.Parse(item);
 
-                buildingElement.BoverketProductCategory = BuildingElementCategory.Unspecified;
+                buildingElement.BoverketProductCategory = BuildingElementCategoryParser.Parse(item, buildingElement.Material);
 
                 buildingElements.Add(buildingElement);
             }

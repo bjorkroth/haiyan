@@ -24,6 +24,11 @@ namespace Haiyan.ConsoleApp.DataImport
 
             var relatedMaterial = firstMaterial.RelatingMaterial as IIfcMaterial;
 
+            if(relatedMaterial == null)
+            {
+                return material;
+            }
+
             material.Name = relatedMaterial.Name;
 
             return material;

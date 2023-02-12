@@ -11,6 +11,7 @@ namespace Haiyan.ConsoleApp.DataImport
 
             var listOfIgnoredNames = new List<string>
             {
+                "VOID",
                 "HÅL",
                 "HÅL K",
                 "DIMPOINT_E",

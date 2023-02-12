@@ -22,7 +22,7 @@ namespace Haiyan.ConsoleApp
         {
             //using (var model = IfcStore.Open(@"C:\Files\Haiyan_IFC\V-57-V-50302030400-QTO.ifc"))
             //using (var model = IfcStore.Open(@"C:\Files\Haiyan_IFC\V-57-V-70022000.ifc"))
-            using (var model = IfcStore.Open(@"C:\Files\Haiyan_IFC\KP-23-V-70022000.ifc"))
+            using (var model = IfcStore.Open(@"C:\Files\Haiyan_IFC\K-20-V-70098000.ifc"))
             {
 
                 var context = new Xbim3DModelContext(model);
@@ -49,11 +49,23 @@ namespace Haiyan.ConsoleApp
                 var beams = new ModelInstanceQuery(model).OfType<IIfcBeam>();
                 var mappedBeams = MapToHaiyanCategory.Map(beams, model);
 
+                var roofs = new ModelInstanceQuery(model).OfType<IIfcRoof>();
+                var mappedRoofs = MapToHaiyanCategory.Map(beams, model);
+
                 var proxy = new ModelInstanceQuery(model).OfType<IIfcBuildingElementProxy>();
                 var mappedProxy = MapToHaiyanCategory.Map(proxy, model);
 
                 var totalVolume = 0.0;
 
+                var combinedUndefined = new List<HaiyanBuildingElement>();
+                combinedUndefined.AddRange(mappedWalls.Where(x => x.BoverketProductCategory == Domain.Enumerations.BuildingElementCategory.Unspecified));
+                combinedUndefined.AddRange(mappedColumns.Where(x => x.BoverketProductCategory == Domain.Enumerations.BuildingElementCategory.Unspecified));
+                combinedUndefined.AddRange(mappedSlabs.Where(x => x.BoverketProductCategory == Domain.Enumerations.BuildingElementCategory.Unspecified));
+                combinedUndefined.AddRange(mappedBeams.Where(x => x.BoverketProductCategory == Domain.Enumerations.BuildingElementCategory.Unspecified));
+                combinedUndefined.AddRange(mappedRoofs.Where(x => x.BoverketProductCategory == Domain.Enumerations.BuildingElementCategory.Unspecified));
+                combinedUndefined.AddRange(mappedProxy.Where(x => x.BoverketProductCategory == Domain.Enumerations.BuildingElementCategory.Unspecified));
+
+                var names = combinedUndefined.Select(x => x.Name).Distinct().ToList();
               
                 foreach (var item in walls)
                 {
