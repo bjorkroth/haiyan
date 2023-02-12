@@ -1,5 +1,6 @@
 ﻿using Haiyan.ConsoleApp.Calculations;
 using Haiyan.ConsoleApp.DataImport;
+using Haiyan.Domain.BuildingElements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +38,11 @@ namespace Haiyan.ConsoleApp
                 var columns = new ModelInstanceQuery(model).OfType<IIfcColumn>();
                 var slabs = new ModelInstanceQuery(model).OfType<IIfcSlab>();
                 var beams = new ModelInstanceQuery(model).OfType<IIfcBeam>();
+
+                var mappedWalls = MapToHaiyanCategory.Map(walls);
+                var mappedColumns = MapToHaiyanCategory.Map(columns);
+                var mappedSlabs = MapToHaiyanCategory.Map(slabs);
+                var mapsBeams = MapToHaiyanCategory.Map(beams);
 
                 var totalVolume = 0.0;
 

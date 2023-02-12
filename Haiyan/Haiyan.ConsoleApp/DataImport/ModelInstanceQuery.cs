@@ -14,11 +14,8 @@ namespace Haiyan.ConsoleApp.DataImport
             _model = model;
         }
 
-        public List<T> OfType<T>() where T : IIfcObject
+        public List<T> OfType<T>() where T : IIfcProduct
         {
-            var buildingElements = new List<HaiyanBuildingElement>();
-
-            var type = typeof(T);
             var objects = _model.Instances.OfType<T>().ToList();
 
             return objects;
