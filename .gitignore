@@ -1,1 +1,8 @@
 ﻿/Haiyan/.idea/
+/Haiyan/Haiyan/bin/Debug/net6.0
+/Haiyan/.vs
+/Haiyan/Haiyan/obj
+/Haiyan/Haiyan.ConsoleApp/bin/Debug
+/Haiyan/Haiyan.ConsoleApp/obj
+/Haiyan/Haiyan.DataCollection/bin/Debug/net6.0
+/Haiyan/Haiyan.DataCollection/obj
