@@ -1,4 +1,5 @@
 ﻿using Haiyan.Domain.Materials;
+using System;
 using System.Linq;
 using Xbim.Ifc4.Interfaces;
 
@@ -10,11 +11,17 @@ namespace Haiyan.ConsoleApp.DataImport
         {
             var material = new HaiyanMaterial();
 
-            var materials = product.HasAssociations.OfType<IIfcRelAssociatesMaterial>();
+            var ifcRelAssociatesMaterials = product.HasAssociations.OfType<IIfcRelAssociatesMaterial>();
 
-            if (!materials.Any()) return material;
+            if (!ifcRelAssociatesMaterials.Any()) return material;
 
-            var firstMaterial = materials.FirstOrDefault();
+            var firstMaterial = ifcRelAssociatesMaterials.FirstOrDefault();
+
+            if(ifcRelAssociatesMaterials.Count() > 1)
+            {
+                Console.WriteLine("Multiple materials for item " + product.Name.ToString());
+            }
+
             var relatedMaterial = firstMaterial.RelatingMaterial as IIfcMaterial;
 
             material.Name = relatedMaterial.Name;

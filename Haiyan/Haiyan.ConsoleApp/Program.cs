@@ -3,7 +3,10 @@ using Haiyan.ConsoleApp.DataImport;
 using Haiyan.Domain.BuildingElements;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Xbim.Common.Geometry;
+using Xbim.Common.XbimExtensions;
 using Xbim.Ifc;
 using Xbim.Ifc4.Interfaces;
 using Xbim.ModelGeometry.Scene;
@@ -35,31 +38,32 @@ namespace Haiyan.ConsoleApp
                     .ToList();
 
                 var walls = new ModelInstanceQuery(model).OfType<IIfcWall>();
-                var mappedWalls = MapToHaiyanCategory.Map(walls);
+                var mappedWalls = MapToHaiyanCategory.Map(walls, model);
 
                 var columns = new ModelInstanceQuery(model).OfType<IIfcColumn>();
-                var mappedColumns = MapToHaiyanCategory.Map(columns);
+                var mappedColumns = MapToHaiyanCategory.Map(columns, model);
 
                 var slabs = new ModelInstanceQuery(model).OfType<IIfcSlab>();
-                var mappedSlabs = MapToHaiyanCategory.Map(slabs);
+                var mappedSlabs = MapToHaiyanCategory.Map(slabs, model);
 
                 var beams = new ModelInstanceQuery(model).OfType<IIfcBeam>();
-                var mappedBeams = MapToHaiyanCategory.Map(beams);
+                var mappedBeams = MapToHaiyanCategory.Map(beams, model);
 
                 var proxy = new ModelInstanceQuery(model).OfType<IIfcBuildingElementProxy>();
-                var mappedProxy = MapToHaiyanCategory.Map(proxy);
+                var mappedProxy = MapToHaiyanCategory.Map(proxy, model);
 
                 var totalVolume = 0.0;
 
-                foreach (var item in ducts)
+              
+                foreach (var item in walls)
                 {
                     //GetVolume(item);
                     //var value = GetProperty(item, "Volume");
                     
-                    var volume = CalculationHelper.CalculateVolume(item, context);
-                    Console.WriteLine("Volume for item " + item.Name.Value + " is " + volume);
+                    var haiyanGeometry = GeometryCalculator.CalculateVolume(item, context);
+                    Console.WriteLine("Volume for item " + item.Name.Value + " is " + haiyanGeometry.Volume);
 
-                    totalVolume += volume;
+                    totalVolume += haiyanGeometry.Volume;
                 }
                 
                 Console.WriteLine("Total volume of duct faces is " + totalVolume + " m3");

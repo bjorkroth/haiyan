@@ -4,6 +4,8 @@ namespace Haiyan.Domain.Enumerations
 {
     public enum BuildingElementCategory
     {
+        [Description("Unspecified, Ospecificerat")]
+        Unspecified = 0,
         [Description("Mineral materials, Bruk och bindemedel")]
         MineralMaterials = 1,
         [Description("Windows, doors and glass, Fönster, dörrar och glas")]

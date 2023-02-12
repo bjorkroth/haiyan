@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Haiyan.Domain.Geometry;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xbim.Common.Geometry;
@@ -7,28 +8,9 @@ using Xbim.ModelGeometry.Scene;
 
 namespace Haiyan.ConsoleApp.Calculations
 {
-    public static class CalculationHelper
+    public static class GeometryCalculator
     {
-
-        public static double VolumeOfMesh(IList<XbimPoint3D> vertices, List<int> trs)
-        {
-            double volume = 0.0;
-
-            for (int i = 0; i < trs.Count; i += 3)
-            {
-                XbimPoint3D p1 = vertices[trs[i + 0]];
-                XbimPoint3D p2 = vertices[trs[i + 1]];
-                XbimPoint3D p3 = vertices[trs[i + 2]];
-
-                var vol = SignedVolumeOfTriangle(p1, p2, p3);
-                //Console.WriteLine("Volume Trg:{0}", vol);
-
-                volume += vol;
-            }
-            return Math.Abs(volume);
-        }
-
-        public static double CalculateVolume(IIfcProduct product, Xbim3DModelContext context)
+        public static HaiyanGeometry CalculateVolume(IIfcProduct product, Xbim3DModelContext context)
         {
             var productShape = context.ShapeInstancesOf(product);
             var _productShape = productShape.Where(s => s.RepresentationType != XbimGeometryRepresentationType.OpeningsAndAdditionsExcluded).ToList();
@@ -38,6 +20,8 @@ namespace Haiyan.ConsoleApp.Calculations
 
             var vol = 0.0;
             var area = 0.0;
+
+            var haiyanGeometry = new HaiyanGeometry();
 
             foreach (var shapeInstance in _productShape)
             {
@@ -61,7 +45,27 @@ namespace Haiyan.ConsoleApp.Calculations
                 vol += FacesVolume(geometry.BoundingBox);
             }
 
-            return Math.Abs(vol * 1e-9);
+            haiyanGeometry.Volume = Math.Abs(vol * 1e-9);
+
+            return haiyanGeometry;
+        }
+
+        public static double VolumeOfMesh(IList<XbimPoint3D> vertices, List<int> trs)
+        {
+            double volume = 0.0;
+
+            for (int i = 0; i < trs.Count; i += 3)
+            {
+                XbimPoint3D p1 = vertices[trs[i + 0]];
+                XbimPoint3D p2 = vertices[trs[i + 1]];
+                XbimPoint3D p3 = vertices[trs[i + 2]];
+
+                var vol = SignedVolumeOfTriangle(p1, p2, p3);
+                //Console.WriteLine("Volume Trg:{0}", vol);
+
+                volume += vol;
+            }
+            return Math.Abs(volume);
         }
 
         public static double FacesVolume(XbimRect3D boundingBox)
