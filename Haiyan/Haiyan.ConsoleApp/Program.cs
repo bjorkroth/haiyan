@@ -19,16 +19,13 @@ namespace Haiyan.ConsoleApp
         {
             //using (var model = IfcStore.Open(@"C:\Files\Haiyan_IFC\V-57-V-50302030400-QTO.ifc"))
             //using (var model = IfcStore.Open(@"C:\Files\Haiyan_IFC\V-57-V-70022000.ifc"))
-            using (var model = IfcStore.Open(@"C:\Files\Haiyan_IFC\KP-23-V-70022000.ifc"))
+            //using (var model = IfcStore.Open(@"C:\Files\Haiyan_IFC\KP-23-V-70022000.ifc"))
+            using (var model = IfcStore.Open(@"C:\Files\Haiyan_IFC\FS-K-20-V-7000.ifc"))
             //using (var model = IfcStore.Open(@"C:\Files\Haiyan_IFC\K-20-V-10060000.ifc"))
             {
 
                 var context = new Xbim3DModelContext(model);
                 context.CreateContext();
-
-                //Get all spaces in the model. 
-                //We use ToList() here to avoid multiple enumeration with Count() and foreach(){}
-                var ducts = model.Instances.OfType<IIfcFlowSegment>().ToList();
 
                 var categories = model.Instances
                     .Select(x => x.GetType().ToString())
@@ -63,7 +60,7 @@ namespace Haiyan.ConsoleApp
                 combinedUndefined.AddRange(mappedRoofs.Where(x => x.Material.Layers.Any()).Where(x => x.Material.Layers.Any(y => y.BoverketProductCategory == Domain.Enumerations.BuildingElementCategory.Unspecified)));
                 combinedUndefined.AddRange(mappedProxy.Where(x => x.Material.Layers.Any()).Where(x => x.Material.Layers.Any(y => y.BoverketProductCategory == Domain.Enumerations.BuildingElementCategory.Unspecified)));
 
-                var names = combinedUndefined.Select(x => x.Name).Distinct().ToList();
+                var names = combinedUndefined.Select(x => x.Type).Distinct().ToList();
 
                 foreach (var item in walls)
                 {

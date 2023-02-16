@@ -1,10 +1,7 @@
 ﻿using Haiyan.Domain.Materials;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using System.Net.NetworkInformation;
-using System.Reflection.Emit;
 using Xbim.Ifc4.Interfaces;
 
 namespace Haiyan.ConsoleApp.DataImport

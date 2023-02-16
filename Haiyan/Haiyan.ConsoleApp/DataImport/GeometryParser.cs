@@ -29,7 +29,7 @@ namespace Haiyan.ConsoleApp.DataImport
 
                     var geometryData = geometry as XbimShapeGeometry;
 
-                    haiyanGeometry.Volume = Math.Floor(geometryData.BoundingBox.Volume);
+                    haiyanGeometry.Volume = Math.Floor(geometryData.BoundingBox.Volume) / 1000000000;
                     haiyanGeometry.Depth = Math.Floor(geometryData.BoundingBox.SizeX);
                     haiyanGeometry.Width = Math.Floor(geometryData.BoundingBox.SizeY);
                     haiyanGeometry.Height = Math.Floor(geometryData.BoundingBox.SizeZ);
