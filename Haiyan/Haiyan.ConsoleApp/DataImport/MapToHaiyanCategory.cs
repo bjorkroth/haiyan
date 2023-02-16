@@ -1,5 +1,4 @@
 ﻿using Haiyan.Domain.BuildingElements;
-using Haiyan.Domain.Enumerations;
 using System;
 using System.Collections.Generic;
 using Xbim.Ifc;
@@ -32,8 +31,6 @@ namespace Haiyan.ConsoleApp.DataImport
                 buildingElement.Geometry = GeometryParser.Parse(item, model);
 
                 buildingElement.Material = MaterialParser.Parse(item);
-
-                buildingElement.BoverketProductCategory = BuildingElementCategoryParser.Parse(item, buildingElement.Material);
 
                 buildingElements.Add(buildingElement);
             }

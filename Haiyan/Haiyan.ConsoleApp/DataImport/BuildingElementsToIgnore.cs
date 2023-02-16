@@ -25,7 +25,11 @@ namespace Haiyan.ConsoleApp.DataImport
                 "CSTAIRNUM_7",
                 "CSTAIRNUM_8",
                 "CSTAIRNUM_9",
-                "CSTAIRNUM_10"
+                "CSTAIRNUM_10",
+                "PBP",
+                "SURVEYMARKER_PBP",
+                "PROJECT BASE POINT",
+                "NV PROJECT BASE POINT"
             };
 
             if (listOfIgnoredNames.Contains(product.Name.ToString().ToUpper()))
