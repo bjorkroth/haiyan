@@ -50,8 +50,16 @@
         <TextBlock Grid.Row="1" Text="Haiyan" FontSize="22" Margin="20,0,0,0" FontWeight="SemiBold" Foreground="#333d47"/>
 
         <!-- Row 2 -->
-        <DataGrid Grid.Row="2" Grid.Column="0" ItemsSource="{Binding BuildingElements}"/>
-        
+        <DataGrid Grid.Row="2" Grid.Column="0" ItemsSource="{Binding MaterialLayers}" AutoGenerateColumns="False" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Thickness" Binding="{Binding Thickness}"/>
+                <DataGridTextColumn Header="Boverket Product Category" Binding="{Binding BoverketProductCategory}"/>
+                <DataGridTextColumn Header="Weight" Binding="{Binding LayerGeometry.Weight}"/>
+                <DataGridTextColumn Header="Volume" Binding="{Binding LayerGeometry.Volume}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
         <!-- Row 3 -->
         <Button Grid.Row="3 " Grid.Column="0" Style="{StaticResource MenuButtonStyle}" Content="Button" Width="100" Height="30" HorizontalAlignment="Right" Margin="0,0,20,0"/>
 
