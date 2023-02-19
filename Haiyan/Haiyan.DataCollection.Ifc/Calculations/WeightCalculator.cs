@@ -19,9 +19,9 @@ namespace Haiyan.DataCollection.Ifc.Calculations
                     return 41 * geometry.Volume;
                 case BuildingElementCategory.Unspecified: 
                     return 0;
+                default:
+                    return 0;
             }
-
-            return 0;
         }
     }
 }

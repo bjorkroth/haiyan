@@ -8,7 +8,7 @@ namespace Haiyan.DataCollection.Ifc.DataImport
     {
         public static BuildingElementCategory Parse(IIfcProduct product, string materialName)
         {
-
+            //TODO: _BuildingElementCatergoryParsers.FirstOrDefault(x => x.CanParse(product, materialName).Catory)
             if (!string.IsNullOrEmpty(materialName))
             {
                 if (InsulationMappingList.MappingList.Contains(materialName.ToUpper()))
@@ -16,17 +16,17 @@ namespace Haiyan.DataCollection.Ifc.DataImport
                     return BuildingElementCategory.Insulation;
                 }
 
-                if (ConcreteMappingList.MappingList.Contains(materialName.ToString().ToUpper()))
+                if (ConcreteMappingList.MappingList.Contains(materialName.ToUpper()))
                 {
                     return BuildingElementCategory.Concrete;
                 }
 
-                if (SteelMappingList.MappingList.Contains(materialName.ToString().ToUpper()))
+                if (SteelMappingList.MappingList.Contains(materialName.ToUpper()))
                 {
                     return BuildingElementCategory.SteelAndOtherMetals;
                 }
 
-                if (GlassMappingList.MappingList.Contains(materialName.ToString().ToUpper()))
+                if (GlassMappingList.MappingList.Contains(materialName.ToUpper()))
                 {
                     return BuildingElementCategory.WindowsDoorsGlass;
                 }
@@ -35,12 +35,16 @@ namespace Haiyan.DataCollection.Ifc.DataImport
 
             var returnValue = BuildingElementCategory.Unspecified;
 
+            if (product.Name == null)
+            {
+                return returnValue;
+            }
+
             SteelMappingList.MappingList.ForEach(x =>
             {
                 if (product.Name.Value.ToString().ToUpper().Contains(x))
                 {
                     returnValue = BuildingElementCategory.SteelAndOtherMetals;
-                    return;
                 }
             });
 
@@ -49,7 +53,6 @@ namespace Haiyan.DataCollection.Ifc.DataImport
                 if (product.Name.Value.ToString().ToUpper().Contains(x))
                 {
                     returnValue = BuildingElementCategory.Concrete;
-                    return;
                 }
             });
 
@@ -58,7 +61,6 @@ namespace Haiyan.DataCollection.Ifc.DataImport
                 if (product.Name.Value.ToString().ToUpper().Contains(x))
                 {
                     returnValue = BuildingElementCategory.Insulation;
-                    return;
                 }
             });
 
@@ -67,7 +69,6 @@ namespace Haiyan.DataCollection.Ifc.DataImport
                 if (product.Name.Value.ToString().ToUpper().Contains(x))
                 {
                     returnValue = BuildingElementCategory.SolidWoods;
-                    return;
                 }
             });
 

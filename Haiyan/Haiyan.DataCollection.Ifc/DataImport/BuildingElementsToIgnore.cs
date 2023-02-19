@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Xbim.Ifc4.Interfaces;
+﻿using Xbim.Ifc4.Interfaces;
 
 namespace Haiyan.DataCollection.Ifc.DataImport
 {
@@ -7,8 +6,6 @@ namespace Haiyan.DataCollection.Ifc.DataImport
     {
         public static bool WillBeIgnored(IIfcProduct product)
         {
-            bool ignored = false;
-
             var listOfIgnoredNames = new List<string>
             {
                 "VOID",
@@ -32,17 +29,22 @@ namespace Haiyan.DataCollection.Ifc.DataImport
                 "NV PROJECT BASE POINT"
             };
 
-            if (listOfIgnoredNames.Contains(product.Name.ToString().ToUpper()))
+            if (!product.Name.HasValue)
             {
-                ignored = true;
+                return false;
+            }
+
+            if (listOfIgnoredNames.Contains(product.Name.Value.ToString().ToUpper()))
+            {
+                return true;
             }
 
             if (product.Name.Value.ToString().Contains("Provision"))
             {
-                ignored = true;
+                return true;
             }
 
-            return ignored;
+            return false;
         }
     }
 }
