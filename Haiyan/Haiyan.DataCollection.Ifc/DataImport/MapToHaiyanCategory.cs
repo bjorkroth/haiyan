@@ -1,11 +1,11 @@
-﻿using Haiyan.ConsoleApp.Calculations;
+﻿using Haiyan.DataCollection.Ifc.Calculations;
 using Haiyan.Domain.BuildingElements;
 using System;
 using System.Collections.Generic;
 using Xbim.Ifc;
 using Xbim.Ifc4.Interfaces;
 
-namespace Haiyan.ConsoleApp.DataImport
+namespace Haiyan.DataCollection.Ifc.DataImport
 {
     public static class MapToHaiyanCategory
     {

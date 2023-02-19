@@ -1,5 +1,5 @@
-﻿using Haiyan.ConsoleApp.Calculations;
-using Haiyan.ConsoleApp.DataImport;
+﻿using Haiyan.DataCollection.Ifc.Calculations;
+using Haiyan.DataCollection.Ifc.DataImport;
 using Haiyan.Domain.BuildingElements;
 using System;
 using System.Collections.Generic;

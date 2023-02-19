@@ -1,11 +1,7 @@
 ﻿using Caliburn.Micro;
+using Haiyan.DataCollection.Ifc.ModelReaders;
 using Haiyan.Domain.BuildingElements;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Haiyan.Desktop.Wpf.ViewModels
 {
@@ -13,7 +9,10 @@ namespace Haiyan.Desktop.Wpf.ViewModels
     {
         public ShellViewModel()
         {
+            BuildingElements = new ObservableCollection<HaiyanBuildingElement>();
 
+            var modelElements = ModelReader.Read("");
+            modelElements.ForEach(element => { BuildingElements.Add(element); });
         }
 
         private ObservableCollection<HaiyanBuildingElement> _buildingElements;

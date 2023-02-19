@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Xbim.Common.Geometry;
 
-namespace Haiyan.ConsoleApp.Calculations
+namespace Haiyan.DataCollection.Ifc.Calculations
 {
     public static class GeometryCalculator
     {

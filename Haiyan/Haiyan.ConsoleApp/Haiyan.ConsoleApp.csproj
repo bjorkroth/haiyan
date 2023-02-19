@@ -12,6 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Haiyan.DataCollection.Ifc\Haiyan.DataCollection.Ifc.csproj" />
       <ProjectReference Include="..\Haiyan\Haiyan.csproj" />
     </ItemGroup>
 

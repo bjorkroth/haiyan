@@ -1,9 +1,7 @@
 ﻿using Haiyan.Domain.BuildingElements;
 using Haiyan.Domain.Enumerations;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Haiyan.ConsoleApp.Calculations
+namespace Haiyan.DataCollection.Ifc.Calculations
 {
     public static class SumWeightByBuildingElementCategory
     {

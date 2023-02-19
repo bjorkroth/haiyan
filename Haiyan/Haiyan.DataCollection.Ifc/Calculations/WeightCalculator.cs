@@ -1,7 +1,7 @@
 ﻿using Haiyan.Domain.Enumerations;
 using Haiyan.Domain.Geometry;
 
-namespace Haiyan.ConsoleApp.Calculations
+namespace Haiyan.DataCollection.Ifc.Calculations
 {
     public static class WeightCalculator
     {

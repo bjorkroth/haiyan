@@ -2,7 +2,7 @@
 using Haiyan.Domain.Lists;
 using Xbim.Ifc4.Interfaces;
 
-namespace Haiyan.ConsoleApp.DataImport
+namespace Haiyan.DataCollection.Ifc.DataImport
 {
     public static class BuildingElementCategoryParser
     {

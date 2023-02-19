@@ -1,4 +1,4 @@
-﻿using Haiyan.ConsoleApp.Calculations;
+﻿using Haiyan.DataCollection.Ifc.Calculations;
 using Haiyan.Domain.Geometry;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using Xbim.Common.Geometry;
 using Xbim.Common.XbimExtensions;
 using Xbim.Ifc;
 
-namespace Haiyan.ConsoleApp.DataImport
+namespace Haiyan.DataCollection.Ifc.DataImport
 {
     public static class GeometryParser
     {

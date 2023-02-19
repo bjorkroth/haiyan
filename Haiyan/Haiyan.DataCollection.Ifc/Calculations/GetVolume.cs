@@ -1,8 +1,8 @@
-﻿using Haiyan.ConsoleApp.DataImport;
+﻿using Haiyan.DataCollection.Ifc.DataImport;
 using System.Linq;
 using Xbim.Ifc4.Interfaces;
 
-namespace Haiyan.ConsoleApp.Calculations
+namespace Haiyan.DataCollection.Ifc.Calculations
 {
     public static class GetVolume
     {

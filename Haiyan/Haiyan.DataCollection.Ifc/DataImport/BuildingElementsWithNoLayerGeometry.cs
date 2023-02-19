@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Haiyan.ConsoleApp.DataImport
+namespace Haiyan.DataCollection.Ifc.DataImport
 {
     public static class BuildingElementsWithNoLayerGeometry
     {
