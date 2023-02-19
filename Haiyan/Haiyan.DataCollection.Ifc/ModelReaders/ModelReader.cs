@@ -1,4 +1,5 @@
 ﻿using Haiyan.DataCollection.Ifc.DataImport;
+using Haiyan.DataCollection.Ifc.DataImport.Materials;
 using Haiyan.Domain.BuildingElements;
 using Xbim.Ifc;
 using Xbim.Ifc4.Interfaces;
@@ -31,29 +32,33 @@ namespace Haiyan.DataCollection.Ifc.ModelReaders
                     .Distinct()
                     .ToList();
 
+                var materialLayerBuilder = new MaterialLayerBuilder(model);
+                var materialLayerListBuilder = new MaterialLayerListBuilder(materialLayerBuilder, model);
+                var materialBuilder = new MaterialBuilder(materialLayerListBuilder);
+                var mapper = new MapToHaiyanCategory(materialBuilder);
 
                 var walls = new ModelInstanceQuery(model).OfType<IIfcWall>();
-                var mappedWalls = MapToHaiyanCategory.Map(walls, model);
+                var mappedWalls = mapper.Map(walls, model);
                 list.AddRange(mappedWalls);
 
                 var columns = new ModelInstanceQuery(model).OfType<IIfcColumn>();
-                var mappedColumns = MapToHaiyanCategory.Map(columns, model);
+                var mappedColumns = mapper.Map(columns, model);
                 list.AddRange(mappedWalls);
 
                 var slabs = new ModelInstanceQuery(model).OfType<IIfcSlab>();
-                var mappedSlabs = MapToHaiyanCategory.Map(slabs, model);
+                var mappedSlabs = mapper.Map(slabs, model);
                 list.AddRange(mappedSlabs);
 
                 var beams = new ModelInstanceQuery(model).OfType<IIfcBeam>();
-                var mappedBeams = MapToHaiyanCategory.Map(beams, model);
+                var mappedBeams = mapper.Map(beams, model);
                 list.AddRange(mappedBeams);
 
                 var roofs = new ModelInstanceQuery(model).OfType<IIfcRoof>();
-                var mappedRoofs = MapToHaiyanCategory.Map(roofs, model);
+                var mappedRoofs = mapper.Map(roofs, model);
                 list.AddRange(mappedRoofs);
 
                 var proxy = new ModelInstanceQuery(model).OfType<IIfcBuildingElementProxy>();
-                var mappedProxy = MapToHaiyanCategory.Map(proxy, model);
+                var mappedProxy = mapper.Map(proxy, model);
                 list.AddRange(mappedProxy);
             }
 
