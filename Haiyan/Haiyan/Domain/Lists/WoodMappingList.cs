@@ -4,6 +4,7 @@
     {
         public static List<string> MappingList = new List<string>()
             {
+                "WOOD",
                 "TRÄ",
                 "TIMBER",
                 "GLULAM"

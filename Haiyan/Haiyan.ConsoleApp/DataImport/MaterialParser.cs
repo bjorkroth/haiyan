@@ -1,14 +1,17 @@
-﻿using Haiyan.Domain.Materials;
+﻿using Haiyan.ConsoleApp.Calculations;
+using Haiyan.Domain.Materials;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
+using Xbim.Ifc;
 using Xbim.Ifc4.Interfaces;
 
 namespace Haiyan.ConsoleApp.DataImport
 {
     public static class MaterialParser
     {
-        public static HaiyanMaterial Parse(IIfcProduct product)
+        public static HaiyanMaterial Parse(IIfcProduct product, IfcStore model)
         {
             var material = new HaiyanMaterial();
 
@@ -17,13 +20,25 @@ namespace Haiyan.ConsoleApp.DataImport
             if (!ifcRelAssociatesMaterials.Any())
             {
                 material.Name = "Unknown";
-                material.Layers = new List<HaiyanMaterialLayer>
+                var layer = new HaiyanMaterialLayer
                 {
-                    new HaiyanMaterialLayer
-                    {
-                        Name = "Unknown",
-                        BoverketProductCategory = BuildingElementCategoryParser.Parse(product, "Unknown")
-                    }
+                    Name = "Unknown",
+                    BoverketProductCategory = BuildingElementCategoryParser.Parse(product, product.Name)
+                };
+
+                try
+                {
+                    layer.LayerGeometry = GeometryParser.Parse(product.EntityLabel, model);
+                    layer.LayerGeometry.Weight = WeightCalculator.Calculate(layer.BoverketProductCategory, layer.LayerGeometry);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Could not calculate volume and weight for " + material.ToString());
+                }
+
+                material.Layers = new List<HaiyanMaterialLayer>()
+                {
+                    layer
                 };
 
                 return material;
@@ -31,7 +46,7 @@ namespace Haiyan.ConsoleApp.DataImport
 
             var firstMaterial = ifcRelAssociatesMaterials.FirstOrDefault();
 
-            if(ifcRelAssociatesMaterials.Count() > 1)
+            if (ifcRelAssociatesMaterials.Count() > 1)
             {
                 Console.WriteLine("Multiple materials for item " + product.Name.ToString());
             }
@@ -41,19 +56,19 @@ namespace Haiyan.ConsoleApp.DataImport
             var materialSetLayer = firstMaterial.RelatingMaterial as IIfcMaterialLayerSet;
             var materialList = firstMaterial.RelatingMaterial as IIfcMaterialList;
 
-            if(materialSetLayerUsage != null)
+            if (materialSetLayerUsage != null)
             {
-                material.Layers = GetLayers(materialSetLayerUsage, product);
+                material.Layers = GetLayers(materialSetLayerUsage, product, model);
             }
 
             if (materialSetLayer != null)
             {
-                material.Layers = GetLayers(materialSetLayer, product);
+                material.Layers = GetLayers(materialSetLayer, product, model);
             }
 
             if (materialList != null)
             {
-                material.Layers = GetLayers(materialList, product);
+                material.Layers = GetLayers(materialList, product, model);
             }
 
             if (relatedMaterial == null && material.Layers.Any())
@@ -67,23 +82,34 @@ namespace Haiyan.ConsoleApp.DataImport
             }
 
             material.Name = relatedMaterial.Name;
-            
-            if(material.Layers == null)
+
+            if (material.Layers == null)
             {
+                var layer = new HaiyanMaterialLayer
+                {
+                    Name = material.Name,
+                    BoverketProductCategory = BuildingElementCategoryParser.Parse(product, material.Name)
+                };
+                try
+                {
+                    layer.LayerGeometry = GeometryParser.Parse(product.EntityLabel, model);
+                    layer.LayerGeometry.Weight = WeightCalculator.Calculate(layer.BoverketProductCategory, layer.LayerGeometry);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Could not calculate volume and weight for " + material.ToString());
+                }
+
                 material.Layers = new List<HaiyanMaterialLayer>()
                 {
-                    new HaiyanMaterialLayer
-                    {
-                        Name = material.Name,
-                        BoverketProductCategory = BuildingElementCategoryParser.Parse(product, material.Name)
-                    }
+                    layer
                 };
             }
 
             return material;
         }
 
-        private static List<HaiyanMaterialLayer> GetLayers(IIfcMaterialList ifcMaterialList, IIfcProduct product)
+        private static List<HaiyanMaterialLayer> GetLayers(IIfcMaterialList ifcMaterialList, IIfcProduct product, IfcStore model)
         {
             if (ifcMaterialList == null)
             {
@@ -96,11 +122,21 @@ namespace Haiyan.ConsoleApp.DataImport
 
                 foreach (var material in ifcMaterialList.Materials)
                 {
-                    layers.Add(new HaiyanMaterialLayer
+                    var materialLayer = new HaiyanMaterialLayer();
+                    materialLayer.Name = material.Name;
+                    materialLayer.BoverketProductCategory = BuildingElementCategoryParser.Parse(product, material.Name);
+
+                    try
                     {
-                        Name = material.Name,
-                        BoverketProductCategory = BuildingElementCategoryParser.Parse(product, material.Name)
-                    });
+                        materialLayer.LayerGeometry = GeometryParser.Parse(material.EntityLabel, model);
+                        materialLayer.LayerGeometry.Weight = WeightCalculator.Calculate(materialLayer.BoverketProductCategory, materialLayer.LayerGeometry);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Could not calculate volume and weight for " + material.ToString());
+                    }
+
+                    layers.Add(materialLayer);
                 }
 
                 return layers;
@@ -109,22 +145,22 @@ namespace Haiyan.ConsoleApp.DataImport
             return default;
         }
 
-        private static List<HaiyanMaterialLayer> GetLayers(IIfcMaterialLayerSetUsage ifcMaterialLayerSetUsage, IIfcProduct product)
+        private static List<HaiyanMaterialLayer> GetLayers(IIfcMaterialLayerSetUsage ifcMaterialLayerSetUsage, IIfcProduct product, IfcStore model)
         {
-            if(ifcMaterialLayerSetUsage == null)
+            if (ifcMaterialLayerSetUsage == null)
             {
                 return default;
             }
 
             if (ifcMaterialLayerSetUsage.ForLayerSet.MaterialLayers.Any())
             {
-                return ProcessLayers(ifcMaterialLayerSetUsage.ForLayerSet.MaterialLayers.ToList(), product);
+                return ProcessLayers(ifcMaterialLayerSetUsage.ForLayerSet.MaterialLayers.ToList(), product, model);
             }
 
             return default;
         }
 
-        private static List<HaiyanMaterialLayer> GetLayers(IIfcMaterialLayerSet ifcMaterialLayerSet, IIfcProduct product)
+        private static List<HaiyanMaterialLayer> GetLayers(IIfcMaterialLayerSet ifcMaterialLayerSet, IIfcProduct product, IfcStore model)
         {
             if (ifcMaterialLayerSet == null)
             {
@@ -133,27 +169,43 @@ namespace Haiyan.ConsoleApp.DataImport
 
             if (ifcMaterialLayerSet.MaterialLayers.Any())
             {
-                return ProcessLayers(ifcMaterialLayerSet.MaterialLayers.ToList(), product);
+                return ProcessLayers(ifcMaterialLayerSet.MaterialLayers.ToList(), product, model);
             }
 
             return default;
         }
 
-        private static List<HaiyanMaterialLayer> ProcessLayers(List<IIfcMaterialLayer> ifcMaterialLayers, IIfcProduct product)
+        private static List<HaiyanMaterialLayer> ProcessLayers(List<IIfcMaterialLayer> ifcMaterialLayers, IIfcProduct product, IfcStore model)
         {
             var layers = new List<HaiyanMaterialLayer>();
 
-            foreach (var layer in ifcMaterialLayers)
+            ifcMaterialLayers.ForEach(x =>
             {
-                layers.Add(new HaiyanMaterialLayer
-                {
-                    Name = layer.Material.Name,
-                    Thickness = layer.LayerThickness,
-                    BoverketProductCategory = BuildingElementCategoryParser.Parse(product, layer.Material.Name)
-                });
-            }
+                layers.Add(CreateLayer(x, product, model));
+            });
 
             return layers;
+        }
+
+        private static HaiyanMaterialLayer CreateLayer(IIfcMaterialLayer layer, IIfcProduct product, IfcStore model)
+        {
+            var materialLayer = new HaiyanMaterialLayer();
+            materialLayer.Name = layer.Material.Name;
+            materialLayer.Thickness = layer.LayerThickness;
+            materialLayer.BoverketProductCategory = BuildingElementCategoryParser.Parse(product, layer.Material.Name);
+
+            try
+            {
+                materialLayer.LayerGeometry = GeometryParser.Parse(layer.EntityLabel, model);
+
+                materialLayer.LayerGeometry.Weight = WeightCalculator.Calculate(materialLayer.BoverketProductCategory, materialLayer.LayerGeometry);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Could not calculate volume and weight for " + layer.ToString());
+            }
+
+            return materialLayer;
         }
     }
 }

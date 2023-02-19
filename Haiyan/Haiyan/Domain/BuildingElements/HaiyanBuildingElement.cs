@@ -1,5 +1,4 @@
-﻿using Haiyan.Domain.Enumerations;
-using Haiyan.Domain.Geometry;
+﻿using Haiyan.Domain.Geometry;
 using Haiyan.Domain.Materials;
 
 namespace Haiyan.Domain.BuildingElements

@@ -1,4 +1,5 @@
-﻿using Haiyan.Domain.BuildingElements;
+﻿using Haiyan.ConsoleApp.Calculations;
+using Haiyan.Domain.BuildingElements;
 using System;
 using System.Collections.Generic;
 using Xbim.Ifc;
@@ -28,9 +29,9 @@ namespace Haiyan.ConsoleApp.DataImport
                 buildingElement.GUID = Guid.NewGuid().ToString();
                 buildingElement.Type = item.ObjectType.ToString();
 
-                buildingElement.Geometry = GeometryParser.Parse(item, model);
+                buildingElement.Geometry = GeometryParser.Parse(item.EntityLabel, model);
 
-                buildingElement.Material = MaterialParser.Parse(item);
+                buildingElement.Material = MaterialParser.Parse(item, model);
 
                 buildingElements.Add(buildingElement);
             }

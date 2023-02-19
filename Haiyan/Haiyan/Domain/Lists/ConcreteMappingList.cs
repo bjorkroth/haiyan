@@ -5,11 +5,13 @@
         public static List<string> MappingList = new List<string>
             {
                 "CONCRETE EXISTING",
+                "CONCRETE - EXISTING",
                 "DEFAULT CONCRETE",
                 "CAST-IN-PLACE",
                 "PRECAST",
                 "PREFAB",
                 "CONCRETE",
+                "LÄTTBETONG",
                 "BETONG",
                 "BTG",
                 "CONCRETE/CONCRETE_UNDEFINED",

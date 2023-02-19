@@ -26,6 +26,11 @@ namespace Haiyan.ConsoleApp.DataImport
                     return BuildingElementCategory.SteelAndOtherMetals;
                 }
 
+                if (GlassMappingList.MappingList.Contains(materialName.ToString().ToUpper()))
+                {
+                    return BuildingElementCategory.WindowsDoorsGlass;
+                }
+
             }
 
             var returnValue = BuildingElementCategory.Unspecified;

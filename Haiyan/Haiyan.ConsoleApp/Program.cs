@@ -20,7 +20,9 @@ namespace Haiyan.ConsoleApp
             //using (var model = IfcStore.Open(@"C:\Files\Haiyan_IFC\V-57-V-50302030400-QTO.ifc"))
             //using (var model = IfcStore.Open(@"C:\Files\Haiyan_IFC\V-57-V-70022000.ifc"))
             //using (var model = IfcStore.Open(@"C:\Files\Haiyan_IFC\KP-23-V-70022000.ifc"))
-            using (var model = IfcStore.Open(@"C:\Files\Haiyan_IFC\FS-K-20-V-7000.ifc"))
+            using (var model = IfcStore.Open(@"C:\Files\Haiyan_IFC\K-20-V-70025000.ifc"))
+            //using (var model = IfcStore.Open(@"C:\Files\Haiyan_IFC\K-20-V-70098000.ifc"))
+            //using (var model = IfcStore.Open(@"C:\Files\Haiyan_IFC\FS-K-20-V-7000.ifc"))
             //using (var model = IfcStore.Open(@"C:\Files\Haiyan_IFC\K-20-V-10060000.ifc"))
             {
 
@@ -50,6 +52,7 @@ namespace Haiyan.ConsoleApp
                 var proxy = new ModelInstanceQuery(model).OfType<IIfcBuildingElementProxy>();
                 var mappedProxy = MapToHaiyanCategory.Map(proxy, model);
 
+
                 var totalVolume = 0.0;
 
                 var combinedUndefined = new List<HaiyanBuildingElement>();
@@ -60,20 +63,31 @@ namespace Haiyan.ConsoleApp
                 combinedUndefined.AddRange(mappedRoofs.Where(x => x.Material.Layers.Any()).Where(x => x.Material.Layers.Any(y => y.BoverketProductCategory == Domain.Enumerations.BuildingElementCategory.Unspecified)));
                 combinedUndefined.AddRange(mappedProxy.Where(x => x.Material.Layers.Any()).Where(x => x.Material.Layers.Any(y => y.BoverketProductCategory == Domain.Enumerations.BuildingElementCategory.Unspecified)));
 
-                var names = combinedUndefined.Select(x => x.Type).Distinct().ToList();
+                var namesUndefinedCategory = combinedUndefined.Select(x => x.Type).Distinct().ToList();
 
-                foreach (var item in walls)
-                {
-                    //GetVolume(item);
-                    //var value = GetProperty(item, "Volume");
+                var combinedNoGeometry = new List<HaiyanBuildingElement>();
+                combinedNoGeometry.AddRange(BuildingElementsWithNoLayerGeometry.Get(mappedWalls));
+                combinedNoGeometry.AddRange(BuildingElementsWithNoLayerGeometry.Get(mappedColumns));
+                combinedNoGeometry.AddRange(BuildingElementsWithNoLayerGeometry.Get(mappedSlabs));
+                combinedNoGeometry.AddRange(BuildingElementsWithNoLayerGeometry.Get(mappedBeams));
+                combinedNoGeometry.AddRange(BuildingElementsWithNoLayerGeometry.Get(mappedRoofs));
+                combinedNoGeometry.AddRange(BuildingElementsWithNoLayerGeometry.Get(mappedProxy));
 
-                    var haiyanGeometry = GeometryCalculator.CalculateVolume(item, context);
-                    Console.WriteLine("Volume for item " + item.Name.Value + " is " + haiyanGeometry.Volume);
+                var namesUndefinedGeometry = combinedNoGeometry.Select(x => x.Type).Distinct().ToList();
 
-                    totalVolume += haiyanGeometry.Volume;
-                }
+                var weightConcreteWalls = SumWeightByBuildingElementCategory.Sum(mappedWalls, Domain.Enumerations.BuildingElementCategory.Concrete);
+                var weightWoodWalls = SumWeightByBuildingElementCategory.Sum(mappedWalls, Domain.Enumerations.BuildingElementCategory.SolidWoods);
+                var weightGlassWalls = SumWeightByBuildingElementCategory.Sum(mappedWalls, Domain.Enumerations.BuildingElementCategory.WindowsDoorsGlass);
+                var weightWoodBeams = SumWeightByBuildingElementCategory.Sum(mappedBeams, Domain.Enumerations.BuildingElementCategory.SolidWoods);
 
-                Console.WriteLine("Total volume of walls are " + totalVolume + " m3");
+                var weightConcreteSlabs = SumWeightByBuildingElementCategory.Sum(mappedSlabs, Domain.Enumerations.BuildingElementCategory.Concrete);
+
+                Console.WriteLine("Total weight of Concrete walls is " + weightConcreteWalls + " kg");
+                Console.WriteLine("Total weight of Wood beams is " + weightWoodBeams + " kg");
+                Console.WriteLine("Total weight of glass walls is " + weightGlassWalls + " kg");
+                Console.WriteLine("Total weight of Wood walls is " + weightWoodWalls + " kg");
+                Console.WriteLine("Total weight of Concrete slabs is " + weightConcreteSlabs + " kg");
+
             }
         }
     }

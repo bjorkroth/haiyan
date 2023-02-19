@@ -1,55 +1,12 @@
-﻿using Haiyan.Domain.Geometry;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xbim.Common.Geometry;
-using Xbim.Ifc4.Interfaces;
-using Xbim.ModelGeometry.Scene;
 
 namespace Haiyan.ConsoleApp.Calculations
 {
     public static class GeometryCalculator
     {
-        public static HaiyanGeometry CalculateVolume(IIfcProduct product, Xbim3DModelContext context)
-        {
-            var productShape = context.ShapeInstancesOf(product);
-            var _productShape = productShape.Where(s => s.RepresentationType != XbimGeometryRepresentationType.OpeningsAndAdditionsExcluded).ToList();
-            var geometry = new XbimShapeGeometry();
-
-            XbimShapeTriangulation mesh;
-
-            var vol = 0.0;
-            var area = 0.0;
-
-            var haiyanGeometry = new HaiyanGeometry();
-
-            foreach (var shapeInstance in _productShape)
-            {
-                geometry = context.ShapeGeometry(shapeInstance);
-
-                // var facesVolume = FacesVolume(geometry.BoundingBox);
-                //
-                // var ms = new MemoryStream(((IXbimShapeGeometryData)geometry).ShapeData);
-                // var br = new BinaryReader(ms);
-                // mesh = br.ReadShapeTriangulation();
-                // mesh = mesh.Transform(((XbimShapeInstance)shapeInstance).Transformation);
-                //
-                // List<int> trs = new List<int>();
-                // foreach (var f in mesh.Faces)
-                // {
-                //     trs = trs.Concat(f.Indices).ToList();
-                //     area += GetAreaOfMesh(mesh, f);
-                // }
-                // vol += VolumeOfMesh(mesh.Vertices, trs);
-
-                vol += FacesVolume(geometry.BoundingBox);
-            }
-
-            haiyanGeometry.Volume = Math.Abs(vol * 1e-9);
-
-            return haiyanGeometry;
-        }
-
         public static double VolumeOfMesh(IList<XbimPoint3D> vertices, List<int> trs)
         {
             double volume = 0.0;
@@ -104,12 +61,6 @@ namespace Haiyan.ConsoleApp.Calculations
             //Console.WriteLine("Area Face:{0}", area);
             return area;
         }
-
-        public static double GetBottomArea()
-        {
-            return 0;
-        }
-
 
         public static double SignedVolumeOfTriangle(XbimPoint3D p1, XbimPoint3D p2, XbimPoint3D p3)
         {
