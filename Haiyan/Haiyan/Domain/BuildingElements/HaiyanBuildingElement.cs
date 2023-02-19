@@ -8,7 +8,7 @@ namespace Haiyan.Domain.BuildingElements
         public string Name { get; set; }
         public string Description { get; set; }
         public string Type { get; set; }
-        public string GUID { get; set; }
+        public string Guid { get; set; }
         public string IfcGuid { get; set; }
         public HaiyanMaterial Material { get; set; }
         public HaiyanGeometry Geometry { get; set; }

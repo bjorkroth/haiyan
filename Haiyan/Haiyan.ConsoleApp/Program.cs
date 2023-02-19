@@ -1,4 +1,4 @@
-﻿using Haiyan.DataCollection.Ifc.Calculations;
+﻿using Haiyan.DataCollection.Ifc.Calculations.Weight;
 using Haiyan.DataCollection.Ifc.DataImport;
 using Haiyan.Domain.BuildingElements;
 using System;

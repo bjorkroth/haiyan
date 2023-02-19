@@ -1,5 +1,4 @@
-﻿using Haiyan.DataCollection.Ifc.DataImport;
-using System.Linq;
+﻿using Haiyan.DataCollection.Ifc.Extensions;
 using Xbim.Ifc4.Interfaces;
 
 namespace Haiyan.DataCollection.Ifc.Calculations
@@ -24,7 +23,7 @@ namespace Haiyan.DataCollection.Ifc.Calculations
 
             if (volume != 0)
                 return volume;
-            return GetProperty.Get(product, "Volume");
+            return product.GetVolume();
         }
     }
 }

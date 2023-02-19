@@ -1,4 +1,4 @@
-﻿using Haiyan.DataCollection.Ifc.Calculations;
+﻿using Haiyan.DataCollection.Ifc.Calculations.Geometry;
 using Haiyan.Domain.Geometry;
 using Xbim.Common.Geometry;
 using Xbim.Common.XbimExtensions;
@@ -30,10 +30,10 @@ namespace Haiyan.DataCollection.Ifc.DataImport
                 foreach (var f in mesh.Faces)
                 {
                     trs = trs.Concat(f.Indices).ToList();
-                    area += GeometryCalculator.GetAreaOfMesh(mesh, f);
+                    area += MeshAreaCalculator.CalculateAreaOfMesh(mesh, f);
                 }
 
-                volumeOfEntity += GeometryCalculator.CalulateVolumeOfMesh(mesh.Vertices, trs);
+                volumeOfEntity += MeshVolumeCalculator.CalculateVolumeOfMesh(mesh.Vertices, trs);
             }
 
             var haiyanGeometry = new HaiyanGeometry();

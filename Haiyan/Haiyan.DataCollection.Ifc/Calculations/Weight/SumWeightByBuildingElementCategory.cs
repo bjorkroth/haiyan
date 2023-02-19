@@ -1,13 +1,13 @@
 ﻿using Haiyan.Domain.BuildingElements;
 using Haiyan.Domain.Enumerations;
 
-namespace Haiyan.DataCollection.Ifc.Calculations
+namespace Haiyan.DataCollection.Ifc.Calculations.Weight
 {
     public static class SumWeightByBuildingElementCategory
     {
         public static double Sum(List<HaiyanBuildingElement> buildingElements, BuildingElementCategory category)
         {
-            if(!buildingElements.Any()) return 0;
+            if (!buildingElements.Any()) return 0;
 
             var weightForCategory = buildingElements
                   .Select(x => x.Material.Layers.Where(y => y.BoverketProductCategory == category))

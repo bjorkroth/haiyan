@@ -1,7 +1,6 @@
-﻿using Haiyan.DataCollection.Ifc.Calculations;
+﻿using Haiyan.DataCollection.Ifc.DataImport.Materials;
+using Haiyan.DataCollection.Ifc.Extensions;
 using Haiyan.Domain.BuildingElements;
-using System;
-using System.Collections.Generic;
 using Xbim.Ifc;
 using Xbim.Ifc4.Interfaces;
 
@@ -16,17 +15,14 @@ namespace Haiyan.DataCollection.Ifc.DataImport
             foreach(var item in modelObject)
             {
               
-                if (BuildingElementsToIgnore.WillBeIgnored(item))
-                {
-                    continue;
-                }
+                if(item.ShouldBeIgnored()) continue;
 
                 var buildingElement = new HaiyanBuildingElement();
                 buildingElement.Name = item.Name;
                 buildingElement.Description = item.Description;
 
                 buildingElement.IfcGuid = item.GlobalId.ToString();
-                buildingElement.GUID = Guid.NewGuid().ToString();
+                buildingElement.Guid = Guid.NewGuid().ToString();
                 buildingElement.Type = item.ObjectType.ToString();
 
                 buildingElement.Geometry = GeometryParser.Parse(item.EntityLabel, model);

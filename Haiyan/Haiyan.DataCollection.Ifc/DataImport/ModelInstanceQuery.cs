@@ -1,7 +1,4 @@
-﻿using Haiyan.Domain.BuildingElements;
-using System.Collections.Generic;
-using System.Linq;
-using Xbim.Ifc;
+﻿using Xbim.Ifc;
 using Xbim.Ifc4.Interfaces;
 
 namespace Haiyan.DataCollection.Ifc.DataImport

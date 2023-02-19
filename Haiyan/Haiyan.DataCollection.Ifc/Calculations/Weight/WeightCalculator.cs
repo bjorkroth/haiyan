@@ -1,13 +1,13 @@
 ﻿using Haiyan.Domain.Enumerations;
 using Haiyan.Domain.Geometry;
 
-namespace Haiyan.DataCollection.Ifc.Calculations
+namespace Haiyan.DataCollection.Ifc.Calculations.Weight
 {
     public static class WeightCalculator
     {
         public static double Calculate(BuildingElementCategory buildingElementCategory, HaiyanGeometry geometry)
         {
-            switch(buildingElementCategory)
+            switch (buildingElementCategory)
             {
                 case BuildingElementCategory.Concrete:
                     return 2300 * geometry.Volume;
@@ -17,7 +17,7 @@ namespace Haiyan.DataCollection.Ifc.Calculations
                     return 2700 * geometry.Volume;
                 case BuildingElementCategory.Insulation:
                     return 41 * geometry.Volume;
-                case BuildingElementCategory.Unspecified: 
+                case BuildingElementCategory.Unspecified:
                     return 0;
                 default:
                     return 0;
