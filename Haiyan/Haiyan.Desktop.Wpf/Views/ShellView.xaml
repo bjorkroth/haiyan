@@ -52,11 +52,12 @@
         <!-- Row 2 -->
         <DataGrid Grid.Row="2" Grid.Column="0" ItemsSource="{Binding MaterialLayers}" AutoGenerateColumns="False" IsReadOnly="True">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
-                <DataGridTextColumn Header="Thickness" Binding="{Binding Thickness}"/>
+                <DataGridTextColumn Header="Name" Binding="{Binding BuildingElementName}"/>
+                <DataGridTextColumn Header="Type" Binding="{Binding BuildingElementType}"/>
                 <DataGridTextColumn Header="Boverket Product Category" Binding="{Binding BoverketProductCategory}"/>
-                <DataGridTextColumn Header="Weight" Binding="{Binding LayerGeometry.Weight}"/>
-                <DataGridTextColumn Header="Volume" Binding="{Binding LayerGeometry.Volume}"/>
+                <DataGridTextColumn Header="Thickness" Binding="{Binding MaterialThickness}"/>
+                <DataGridTextColumn Header="Weight" Binding="{Binding MaterialWeight}"/>
+                <DataGridTextColumn Header="Volume" Binding="{Binding MaterialVolume}"/>
             </DataGrid.Columns>
         </DataGrid>
 
