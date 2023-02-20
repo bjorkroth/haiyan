@@ -3,6 +3,7 @@ using Haiyan.Desktop.Wpf.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using Haiyan.DataCollection.Ifc.ModelReaders;
 
 namespace Haiyan.Desktop.Wpf
 {
@@ -19,6 +20,7 @@ namespace Haiyan.Desktop.Wpf
         {
             container = new SimpleContainer();
             container.Singleton<IWindowManager, WindowManager>();
+            container.Singleton<IModelReader, ModelReader>();
 
             container.PerRequest<ShellViewModel>();
         }

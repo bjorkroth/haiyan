@@ -9,12 +9,12 @@ namespace Haiyan.Desktop.Wpf.ViewModels
 {
     public class ShellViewModel : Conductor<Screen>
     {
-        public ShellViewModel()
+        public ShellViewModel(IModelReader modelReader)
         {
             BuildingElements = new ObservableCollection<HaiyanBuildingElement>();
             MaterialLayers = new ObservableCollection<HaiyanMaterialLayer>();
 
-            var modelElements = ModelReader.Read("");
+            var modelElements = modelReader.Read("");
             modelElements.ForEach(element => { BuildingElements.Add(element); });
 
             var layers = modelElements

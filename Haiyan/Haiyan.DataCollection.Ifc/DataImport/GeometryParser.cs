@@ -26,14 +26,14 @@ namespace Haiyan.DataCollection.Ifc.DataImport
                 var triangulation = binaryReader.ReadShapeTriangulation();
 
                 var mesh = triangulation.Transform(((XbimShapeInstance)shapeInstance).Transformation);
-                List<int> trs = new List<int>();
-                foreach (var f in mesh.Faces)
+                List<int> triangles = new List<int>();
+                foreach (var faceTriangulation in mesh.Faces)
                 {
-                    trs = trs.Concat(f.Indices).ToList();
-                    area += MeshAreaCalculator.CalculateAreaOfMesh(mesh, f);
+                    triangles = triangles.Concat(faceTriangulation.Indices).ToList();
+                    area += MeshAreaCalculator.CalculateAreaOfMesh(mesh, faceTriangulation);
                 }
 
-                volumeOfEntity += MeshVolumeCalculator.CalculateVolumeOfMesh(mesh.Vertices, trs);
+                volumeOfEntity += MeshVolumeCalculator.CalculateVolumeOfMesh(mesh.Vertices, triangles);
             }
 
             var haiyanGeometry = new HaiyanGeometry();

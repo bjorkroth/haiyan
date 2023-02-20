@@ -1,6 +1,4 @@
 ﻿using Haiyan.Domain.BuildingElements;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Haiyan.DataCollection.Ifc.DataImport
 {

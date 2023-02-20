@@ -7,9 +7,9 @@ using Xbim.ModelGeometry.Scene;
 
 namespace Haiyan.DataCollection.Ifc.ModelReaders
 {
-    public static class ModelReader
+    public class ModelReader : IModelReader
     {
-        public static List<HaiyanBuildingElement> Read(string filePath)
+        public List<HaiyanBuildingElement> Read(string filePath)
         {
             var list = new List<HaiyanBuildingElement>();
 
@@ -27,7 +27,7 @@ namespace Haiyan.DataCollection.Ifc.ModelReaders
                 var context = new Xbim3DModelContext(model);
                 context.CreateContext();
 
-                var categories = model.Instances
+                var categoriesInModel = model.Instances
                     .Select(x => x.GetType().ToString())
                     .Distinct()
                     .ToList();
@@ -43,7 +43,7 @@ namespace Haiyan.DataCollection.Ifc.ModelReaders
 
                 var columns = new ModelInstanceQuery(model).OfType<IIfcColumn>();
                 var mappedColumns = mapper.Map(columns, model);
-                list.AddRange(mappedWalls);
+                list.AddRange(mappedColumns);
 
                 var slabs = new ModelInstanceQuery(model).OfType<IIfcSlab>();
                 var mappedSlabs = mapper.Map(slabs, model);
