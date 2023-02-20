@@ -5,7 +5,7 @@ namespace Haiyan.DataCollection.Ifc.Extensions
 {
     public static class IfcProductShouldBeIgnoredExtension
     {
-        private static readonly IEnumerable<string> _ignoredTypes = new ReadOnlyCollection<string>(new List<string>()
+        private static readonly IEnumerable<string> IgnoredTypes = new ReadOnlyCollection<string>(new List<string>()
         {
             "VOID",
             "HÅL",
@@ -35,7 +35,7 @@ namespace Haiyan.DataCollection.Ifc.Extensions
                 return false;
             }
 
-            if (_ignoredTypes.Contains(product.Name.Value.ToString().ToUpper()))
+            if (IgnoredTypes.Contains(product.Name.Value.ToString().ToUpper()))
             {
                 return true;
             }
