@@ -7,6 +7,7 @@ namespace Haiyan.Desktop.Wpf.ViewModels
     {
         public MaterialLayerViewModel(HaiyanBuildingElement buildingElement, HaiyanMaterialLayer materialLayer)
         {
+            BuildingElementCategory = buildingElement.GetType().Name;
             BuildingElementName = buildingElement.Name;
             BuildingElementType = buildingElement.Type;
             BoverketProductCategory = materialLayer.BoverketProductCategory.ToString();
@@ -15,6 +16,7 @@ namespace Haiyan.Desktop.Wpf.ViewModels
             MaterialWeight = materialLayer.LayerGeometry.Weight;
         }
 
+        public string BuildingElementCategory { get; set; }
         public string BuildingElementName { get; set; }
         public string BuildingElementType { get; set; }
         public string BoverketProductCategory { get; set; }

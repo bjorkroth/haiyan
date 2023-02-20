@@ -1,5 +1,4 @@
 ﻿using Haiyan.Domain.Materials;
-using Xbim.Ifc;
 using Xbim.Ifc4.Interfaces;
 
 namespace Haiyan.DataCollection.Ifc.DataImport.Materials
@@ -7,12 +6,10 @@ namespace Haiyan.DataCollection.Ifc.DataImport.Materials
     public class MaterialLayerListBuilder : IMaterialLayerListBuilder
     {
         private readonly IMaterialLayerBuilder _materialLayerBuilder;
-        private readonly IfcStore _model;
 
-        public MaterialLayerListBuilder(IMaterialLayerBuilder materialLayerBuilder, IfcStore model)
+        public MaterialLayerListBuilder(IMaterialLayerBuilder materialLayerBuilder)
         {
             _materialLayerBuilder = materialLayerBuilder;
-            _model = model;
         }
 
         public IEnumerable<HaiyanMaterialLayer> Build(IIfcProduct product, IList<IIfcRelAssociatesMaterial> productMaterialAssociates)
@@ -29,24 +26,24 @@ namespace Haiyan.DataCollection.Ifc.DataImport.Materials
             if (firstMaterial == null) return layers;
 
             var relatedMaterial = firstMaterial.RelatingMaterial as IIfcMaterial;
-            var materialSetLayerUsage = firstMaterial.RelatingMaterial as IIfcMaterialLayerSetUsage;
-            var materialSetLayer = firstMaterial.RelatingMaterial as IIfcMaterialLayerSet;
-            var materialList = firstMaterial.RelatingMaterial as IIfcMaterialList;
 
-            if (materialSetLayerUsage != null)
+            if (firstMaterial.RelatingMaterial is IIfcMaterialLayerSetUsage materialSetLayerUsage)
             {
+                //TODO: enumerable
                 layers = new BuildMaterialLayersFromMaterialLayerSetUsage(_materialLayerBuilder)
-                    .BuildLayers(materialSetLayerUsage, product);
+                    .BuildLayers(materialSetLayerUsage, product).ToList();
             }
-            else if (materialSetLayer != null)
+            else if (firstMaterial.RelatingMaterial is IIfcMaterialLayerSet materialSetLayer)
             {
+                //TODO: enumerable
                 layers = new BuildMaterialLayersFromMaterialLayerSet(_materialLayerBuilder)
-                    .BuildLayers(materialSetLayer, product);
+                    .BuildLayers(materialSetLayer, product).ToList();
             }
-            else if (materialList != null)
+            else if (firstMaterial.RelatingMaterial is IIfcMaterialList materialList)
             {
+                //TODO: enumerable
                 layers = new BuildMaterialLayersFromMaterialList(_materialLayerBuilder)
-                    .BuildLayers(materialList, product);
+                    .BuildLayers(materialList, product).ToList();
             }
 
             if (relatedMaterial == null)
@@ -54,11 +51,11 @@ namespace Haiyan.DataCollection.Ifc.DataImport.Materials
                 return layers;
             }
 
-            if (!layers.Any())
-            {
-                var layerByMaterial = _materialLayerBuilder.Build(product, 0, relatedMaterial.Name, relatedMaterial.Name, product.EntityLabel);
-                layers = new List<HaiyanMaterialLayer> { layerByMaterial };
-            }
+            if (layers.Any()) 
+                return layers;
+
+            var layerByMaterial = _materialLayerBuilder.Build(product, 0, relatedMaterial.Name, relatedMaterial.Name, product.EntityLabel);
+            layers = new List<HaiyanMaterialLayer> { layerByMaterial };
 
             return layers;
         }

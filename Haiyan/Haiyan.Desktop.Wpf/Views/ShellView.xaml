@@ -52,6 +52,7 @@
         <!-- Row 2 -->
         <DataGrid Grid.Row="2" Grid.Column="0" ItemsSource="{Binding MaterialLayers}" AutoGenerateColumns="False" IsReadOnly="True">
             <DataGrid.Columns>
+                <DataGridTextColumn Header="Category" Binding="{Binding BuildingElementCategory}"/>
                 <DataGridTextColumn Header="Name" Binding="{Binding BuildingElementName}"/>
                 <DataGridTextColumn Header="Type" Binding="{Binding BuildingElementType}"/>
                 <DataGridTextColumn Header="Boverket Product Category" Binding="{Binding BoverketProductCategory}"/>

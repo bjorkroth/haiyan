@@ -8,7 +8,7 @@ namespace Haiyan.Desktop.Wpf.ViewModelFactory
 {
     public class MaterialLayerViewModelFactory
     {
-        public ObservableCollection<MaterialLayerViewModel> Create(List<HaiyanBuildingElement> buildingElements)
+        public ObservableCollection<MaterialLayerViewModel> Create(IEnumerable<HaiyanBuildingElement> buildingElements)
         {
             var materialLayers = new ObservableCollection<MaterialLayerViewModel>();
 

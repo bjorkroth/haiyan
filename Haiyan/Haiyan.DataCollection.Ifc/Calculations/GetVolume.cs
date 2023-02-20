@@ -12,17 +12,12 @@ namespace Haiyan.DataCollection.Ifc.Calculations
                 .OfType<IIfcElementQuantity>()
                 .SelectMany(qset => qset.Quantities)
                 .OfType<IIfcQuantityVolume>()
-                .FirstOrDefault() != null
-                ? product.IsDefinedBy
-                    .SelectMany(r => r.RelatingPropertyDefinition.PropertySetDefinitions)
-                    .OfType<IIfcElementQuantity>()
-                    .SelectMany(qset => qset.Quantities)
-                    .OfType<IIfcQuantityVolume>()
-                    .FirstOrDefault()!.VolumeValue
-                : 0;
+                .FirstOrDefault()!.VolumeValue;
 
-            if (volume != 0)
+
+            if (volume.Value != null)
                 return volume;
+
             return product.GetVolume();
         }
     }

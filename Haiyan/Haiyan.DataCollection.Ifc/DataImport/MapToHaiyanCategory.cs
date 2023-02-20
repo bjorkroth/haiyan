@@ -1,5 +1,5 @@
 ﻿using Haiyan.DataCollection.Ifc.DataImport.Materials;
-using Haiyan.DataCollection.Ifc.Extensions;
+using Haiyan.DataCollection.Ifc.DataImport.ModelElementMapper;
 using Haiyan.Domain.BuildingElements;
 using Xbim.Ifc;
 using Xbim.Ifc4.Interfaces;
@@ -8,36 +8,36 @@ namespace Haiyan.DataCollection.Ifc.DataImport
 {
     public class MapToHaiyanCategory
     {
+        private readonly IfcStore _model;
         private readonly IMaterialBuilder _materialBuilder;
 
-        public MapToHaiyanCategory(IMaterialBuilder materialBuilder)
+        public MapToHaiyanCategory(IfcStore model, IMaterialBuilder materialBuilder)
         {
+            _model = model;
             _materialBuilder = materialBuilder;
         }
 
-        public List<HaiyanBuildingElement> Map<T>(List<T> modelObject, IfcStore model) where T : IIfcProduct
+        public IEnumerable<HaiyanBuildingElement> MapToCategory(IEnumerable<IIfcProduct> modelObjects)
         {
-            var buildingElements = new List<HaiyanBuildingElement>();
-
-            foreach(var item in modelObject)
+            var modelElementMapper = new List<IModelElementMapper>
             {
-                if(item.ShouldBeIgnored()) continue;
+                new WallModelElementMapper(_model, _materialBuilder),
+                new SlabModelElementMapper(_model, _materialBuilder),
+                new BeamModelElementMapper(_model, _materialBuilder),
+                new ColumnModelElementMapper(_model, _materialBuilder),
+                new RoofModelElementMapper(_model, _materialBuilder),
+                new ProxyModelElementMapper(_model, _materialBuilder),
+            };
 
-                var buildingElement = new HaiyanBuildingElement
-                {
-                    Name = item.Name ?? "",
-                    Description = item.Description ?? "",
-                    IfcGuid = item.GlobalId.ToString(),
-                    Guid = Guid.NewGuid().ToString(),
-                    Type = item.ObjectType.ToString() ?? "",
-                    Geometry = GeometryParser.Parse(item.EntityLabel, model),
-                    Material = _materialBuilder.Build(item, model)
-                };
+            foreach (var modelObject in modelObjects)
+            {
+                var modelElementMapperForObject = modelElementMapper.FirstOrDefault(x => x.CanApply(modelObject));
 
-                buildingElements.Add(buildingElement);
+                if (modelElementMapperForObject == null)
+                    continue;
+
+                yield return modelElementMapperForObject.MapBuildingElement(modelObject);
             }
-
-            return buildingElements;
         }
     }
 }

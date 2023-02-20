@@ -12,19 +12,17 @@ namespace Haiyan.DataCollection.Ifc.DataImport.Materials
             _materialLayerBuilder = materialLayerBuilder;
         }
 
-        public List<HaiyanMaterialLayer> BuildLayers(IIfcMaterialLayerSet ifcMaterialLayerSet, IIfcProduct product)
+        public IEnumerable<HaiyanMaterialLayer> BuildLayers(IIfcMaterialLayerSet ifcMaterialLayerSet, IIfcProduct product)
         {
-            if (!ifcMaterialLayerSet.MaterialLayers.Any()) return default;
+            if (!ifcMaterialLayerSet.MaterialLayers.Any())
+                yield break;
 
             var ifcMaterialLayers = ifcMaterialLayerSet.MaterialLayers.ToList();
-            var layers = new List<HaiyanMaterialLayer>();
 
-            ifcMaterialLayers.ForEach(layer =>
+            foreach (var layer in ifcMaterialLayers)
             {
-                layers.Add(_materialLayerBuilder.BuildFromMaterialLayer(layer, product));
-            });
-
-            return layers;
+                yield return _materialLayerBuilder.BuildFromMaterialLayer(layer, product);
+            }
         }
     }
 }
