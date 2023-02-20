@@ -8,7 +8,7 @@ namespace Haiyan.DataCollection.Ifc.DataImport
 {
     public class MapToHaiyanCategory
     {
-        private IMaterialBuilder _materialBuilder;
+        private readonly IMaterialBuilder _materialBuilder;
 
         public MapToHaiyanCategory(IMaterialBuilder materialBuilder)
         {

@@ -35,7 +35,7 @@ namespace Haiyan.DataCollection.Ifc.DataImport.Materials
             {
                 Name = layerMaterialName,
                 Thickness = thickness,
-                BoverketProductCategory = BuildingElementCategoryParser.Parse(product, layerMaterialName)
+                BoverketProductCategory = new BuildingElementCategoryIdentifier().IdentifyBuildingElementCategory(product, layerMaterialName)
             };
 
             try
