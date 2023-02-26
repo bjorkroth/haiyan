@@ -20,15 +20,6 @@ namespace Haiyan.Desktop.Wpf.ViewModels
 
         public async Task OpenModel()
         {
-            //var filePath = @"C:\Files\Haiyan_IFC\V-57-V-50302030400-QTO.ifc";
-            //var filePath = @"C:\Files\Haiyan_IFC\V-57-V-70022000.ifc";
-            var filePath = @"C:\Files\Haiyan_IFC\KP-23-V-70022000.ifc";
-            //var filePath = @"C:\Files\Haiyan_IFC\K-20-V-70025000.ifc";
-            //var filePath = @"C:\Files\Haiyan_IFC\K-20-V-70022000.ifc";
-            //var filePath = @"C:\Files\Haiyan_IFC\K-20-V-70098000.ifc";
-            //var filePath = @"C:\Files\Haiyan_IFC\FS-K-20-V-7000.ifc";
-            //var filePath = @"C:\Files\Haiyan_IFC\K-20-V-10060000.ifc";
-
             var openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "IFC files|*.ifc;*.ifcZIP;*.zip";
 

@@ -8,13 +8,15 @@ using Haiyan.Desktop.Wpf.Views;
 
 namespace Haiyan.Desktop.Wpf.ViewModels
 {
-    public class ShellViewModel : Conductor<Screen>, IHandle<StatusMessageEvent>, IHandle<ModelElementsAreRead>
+    public class ShellViewModel : Conductor<Screen>, IHandle<StatusMessageEvent>, IHandle<ModelElementsAreRead>, IHandle<OpenAnotherModelEvent>
     {
         private readonly IEventAggregator _eventAggregator;
+        private readonly IModelReader _modelReader;
 
         public ShellViewModel(IEventAggregator eventAggregator, IModelReader modelReader)
         {
             _eventAggregator = eventAggregator;
+            _modelReader = modelReader;
             _eventAggregator.SubscribeOnPublishedThread(this);
 
             MaterialDataView = new MaterialDataView();
@@ -38,7 +40,17 @@ namespace Haiyan.Desktop.Wpf.ViewModels
             }
         }
 
-        public UserControl MaterialDataView { get; set; }
+        private UserControl _materialDataView { get; set; }
+
+        public UserControl MaterialDataView
+        {
+            get => _materialDataView;
+            set
+            {
+                _materialDataView = value;
+                NotifyOfPropertyChange(() => MaterialDataView);
+            }
+        }
 
         private string _statusField { get; set; }
 
@@ -63,10 +75,20 @@ namespace Haiyan.Desktop.Wpf.ViewModels
         {
             MaterialDataView = new MaterialDataView
             {
-                DataContext = new MaterialDataViewModel(message.ModelElements)
+                DataContext = new MaterialDataViewModel(_eventAggregator, message.ModelElements)
             };
 
             MainContentView = MaterialDataView;
+
+            return Task.CompletedTask;
+        }
+
+        public Task HandleAsync(OpenAnotherModelEvent message, CancellationToken cancellationToken)
+        {
+            MainContentView = new OpenModelView
+            {
+                DataContext = new OpenModelViewModel(_eventAggregator, _modelReader)
+            };
 
             return Task.CompletedTask;
         }

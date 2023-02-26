@@ -25,6 +25,8 @@ namespace Haiyan.DataCollection.Ifc.DataImport
                 new ColumnModelElementMapper(model, _materialBuilder),
                 new RoofModelElementMapper(model, _materialBuilder),
                 new ProxyModelElementMapper(model, _materialBuilder),
+                new DoorModelElementMapper(model, _materialBuilder),
+                new WindowModelElementMapper(model, _materialBuilder),
             };
 
             foreach (var modelObject in modelObjects)
