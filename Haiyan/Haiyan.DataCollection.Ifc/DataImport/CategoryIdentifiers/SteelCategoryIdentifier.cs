@@ -11,7 +11,8 @@ namespace Haiyan.DataCollection.Ifc.DataImport.CategoryIdentifiers
             if (string.IsNullOrEmpty(materialName))
                 return false;
 
-            if (SteelMappingList.MappingList.Any(materialName.Contains))
+            materialName = materialName.ToUpper();
+            if (SteelMappingList.MappingList.Any(x => materialName.Contains(x)))
                 return true;
 
             var productName = product.Name?.Value?.ToString()?.ToUpper();

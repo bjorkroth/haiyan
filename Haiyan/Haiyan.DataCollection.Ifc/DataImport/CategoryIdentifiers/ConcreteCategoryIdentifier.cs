@@ -12,6 +12,7 @@ namespace Haiyan.DataCollection.Ifc.DataImport.CategoryIdentifiers
             if (string.IsNullOrEmpty(materialName))
                 return false;
 
+            materialName = materialName.ToUpper();
             if (ConcreteMappingList.MappingList.Any(materialName.Contains))
                 return true;
 

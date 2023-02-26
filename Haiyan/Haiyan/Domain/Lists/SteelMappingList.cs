@@ -4,6 +4,7 @@
     {
         public static List<string> MappingList = new List<string>
             {
+                "STEEL",
                 "STEEL EXISTING",
                 "STEEL/STEEL_UNDEFINED",
                 "STEEL/S235JR",
