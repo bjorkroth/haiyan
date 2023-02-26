@@ -20,6 +20,7 @@ namespace Haiyan.Desktop.Wpf
         {
             container = new SimpleContainer();
             container.Singleton<IWindowManager, WindowManager>();
+            container.Singleton<IEventAggregator, EventAggregator>();
             container.Singleton<IModelReader, ModelReader>();
 
             container.PerRequest<ShellViewModel>();

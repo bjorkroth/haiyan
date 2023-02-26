@@ -1,51 +1,74 @@
-﻿using System;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using Haiyan.DataCollection.Ifc.ModelReaders;
-using System.Collections.ObjectModel;
-using Haiyan.Desktop.Wpf.ViewModelFactory;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Controls;
+using Haiyan.Desktop.Wpf.Events;
+using Haiyan.Desktop.Wpf.Views;
 
 namespace Haiyan.Desktop.Wpf.ViewModels
 {
-    public class ShellViewModel : Conductor<Screen>, IDisposable
+    public class ShellViewModel : Conductor<Screen>, IHandle<StatusMessageEvent>, IHandle<ModelElementsAreRead>
     {
-        public ShellViewModel(IModelReader modelReader)
+        private readonly IEventAggregator _eventAggregator;
+
+        public ShellViewModel(IEventAggregator eventAggregator, IModelReader modelReader)
         {
-            MaterialLayers = new ObservableCollection<MaterialLayerViewModel>();
+            _eventAggregator = eventAggregator;
+            _eventAggregator.SubscribeOnPublishedThread(this);
 
-            //var filePath = @"C:\Files\Haiyan_IFC\V-57-V-50302030400-QTO.ifc";
-            //var filePath = @"C:\Files\Haiyan_IFC\V-57-V-70022000.ifc";
-            var filePath = @"C:\Files\Haiyan_IFC\KP-23-V-70022000.ifc";
-            //var filePath = @"C:\Files\Haiyan_IFC\K-20-V-70025000.ifc";
-            //var filePath = @"C:\Files\Haiyan_IFC\K-20-V-70022000.ifc";
-            //var filePath = @"C:\Files\Haiyan_IFC\K-20-V-70098000.ifc";
-            //var filePath = @"C:\Files\Haiyan_IFC\FS-K-20-V-7000.ifc";
-            //var filePath = @"C:\Files\Haiyan_IFC\K-20-V-10060000.ifc";
+            MaterialDataView = new MaterialDataView();
+            StatusField = "";
 
-            try
+            MainContentView = new OpenModelView
             {
-                var modelElements = modelReader.Read(filePath);
-                MaterialLayers = new MaterialLayerViewModelFactory().Create(modelElements);
-            }
-            finally
-            {
-                modelReader.Dispose();
-            }
+                DataContext = new OpenModelViewModel(_eventAggregator, modelReader)
+            };
         }
 
+        private UserControl _mainContentView { get; set; }
 
-        private ObservableCollection<MaterialLayerViewModel> _materialLayers;
-        public ObservableCollection<MaterialLayerViewModel> MaterialLayers
+        public UserControl MainContentView
         {
-            get => _materialLayers;
+            get => _mainContentView;
             set
             {
-                _materialLayers = value;
-                NotifyOfPropertyChange(() => MaterialLayers);
+                _mainContentView = value;
+                NotifyOfPropertyChange(() => MainContentView);
             }
         }
 
-        public void Dispose()
+        public UserControl MaterialDataView { get; set; }
+
+        private string _statusField { get; set; }
+
+        public string StatusField
         {
+            get => _statusField;
+            set
+            {
+                _statusField = value;
+                NotifyOfPropertyChange(() => StatusField);
+            }
+        }
+
+
+        public Task HandleAsync(StatusMessageEvent message, CancellationToken cancellationToken)
+        {
+            StatusField = message.Message;
+            return Task.CompletedTask;
+        }
+
+        public Task HandleAsync(ModelElementsAreRead message, CancellationToken cancellationToken)
+        {
+            MaterialDataView = new MaterialDataView
+            {
+                DataContext = new MaterialDataViewModel(message.ModelElements)
+            };
+
+            MainContentView = MaterialDataView;
+
+            return Task.CompletedTask;
         }
     }
 }
