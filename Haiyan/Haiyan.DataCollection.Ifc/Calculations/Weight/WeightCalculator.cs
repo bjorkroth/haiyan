@@ -5,18 +5,26 @@ namespace Haiyan.DataCollection.Ifc.Calculations.Weight
 {
     public static class WeightCalculator
     {
+        private static double ConcreteDensityPerKilo => 2300;
+        private static double SolidWoodDensityPerKilo => 465;
+        private static double SteelDensityPerKilo => 2700;
+        private static double InsulationDensityPerKilo => 41;
+        private static double GlassDensityPerKilo => 2500;
+
         public static double Calculate(BuildingElementCategory buildingElementCategory, HaiyanGeometry geometry)
         {
             switch (buildingElementCategory)
             {
                 case BuildingElementCategory.Concrete:
-                    return 2300 * geometry.Volume;
+                    return ConcreteDensityPerKilo * geometry.Volume;
                 case BuildingElementCategory.SolidWoods:
-                    return 465 * geometry.Volume;
+                    return SolidWoodDensityPerKilo * geometry.Volume;
                 case BuildingElementCategory.SteelAndOtherMetals:
-                    return 2700 * geometry.Volume;
+                    return SteelDensityPerKilo * geometry.Volume;
                 case BuildingElementCategory.Insulation:
-                    return 41 * geometry.Volume;
+                    return InsulationDensityPerKilo * geometry.Volume;
+                case BuildingElementCategory.WindowsDoorsGlass:
+                    return GlassDensityPerKilo * geometry.Volume;
                 case BuildingElementCategory.Unspecified:
                     return 0;
                 default:
