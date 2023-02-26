@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using Haiyan.Desktop.Wpf.ViewModels;
 using Haiyan.Domain.BuildingElements;
 
@@ -11,9 +10,6 @@ namespace Haiyan.Desktop.Wpf.ViewModelFactory
         public ObservableCollection<MaterialLayerViewModel> Create(IEnumerable<HaiyanBuildingElement> buildingElements)
         {
             var materialLayers = new ObservableCollection<MaterialLayerViewModel>();
-
-            if (!buildingElements.Any())
-                return materialLayers;
 
             foreach (var buildingElement in buildingElements)
             {

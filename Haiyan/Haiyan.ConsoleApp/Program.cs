@@ -35,27 +35,27 @@ namespace Haiyan.ConsoleApp
                     .ToList();
 
                 var materialLayerBuilder = new MaterialLayerBuilder(model);
-                var materialLayerListBuilder = new MaterialLayerListBuilder(materialLayerBuilder, model);
+                var materialLayerListBuilder = new MaterialLayerListBuilder(materialLayerBuilder);
                 var materialBuilder = new MaterialBuilder(materialLayerListBuilder);
                 var mapper = new MapToHaiyanCategory(materialBuilder);
 
                 var walls = new ModelInstanceQuery(model).OfType<IIfcWall>();
-                var mappedWalls = mapper.Map(walls, model);
+                var mappedWalls = mapper.MapToCategory(model,walls).ToList();
 
                 var columns = new ModelInstanceQuery(model).OfType<IIfcColumn>();
-                var mappedColumns = mapper.Map(columns, model);
+                var mappedColumns = mapper.MapToCategory(model, columns).ToList();
 
                 var slabs = new ModelInstanceQuery(model).OfType<IIfcSlab>();
-                var mappedSlabs = mapper.Map(slabs, model);
+                var mappedSlabs = mapper.MapToCategory(model, slabs).ToList();
 
                 var beams = new ModelInstanceQuery(model).OfType<IIfcBeam>();
-                var mappedBeams = mapper.Map(beams, model);
+                var mappedBeams = mapper.MapToCategory(model, beams).ToList();
 
                 var roofs = new ModelInstanceQuery(model).OfType<IIfcRoof>();
-                var mappedRoofs = mapper.Map(roofs, model);
+                var mappedRoofs = mapper.MapToCategory(model, roofs).ToList();
 
                 var proxy = new ModelInstanceQuery(model).OfType<IIfcBuildingElementProxy>();
-                var mappedProxy = mapper.Map(proxy, model);
+                var mappedProxy = mapper.MapToCategory(model, proxy).ToList();
 
 
                 var totalVolume = 0.0;

@@ -1,6 +1,7 @@
 ﻿using Haiyan.Domain.Enumerations;
 using Haiyan.Domain.Lists;
 using Xbim.Ifc4.Interfaces;
+using Xbim.Ifc4.SharedBldgElements;
 
 namespace Haiyan.DataCollection.Ifc.DataImport.CategoryIdentifiers
 {
@@ -20,6 +21,12 @@ namespace Haiyan.DataCollection.Ifc.DataImport.CategoryIdentifiers
                 return false;
 
             if (ConcreteMappingList.MappingList.Any(x => productName.Contains(x)))
+                return true;
+
+            var productType = product.GetType().Name;
+            if (productName == "W" && productType == nameof(IfcWall))
+                return true;
+            if (productName == "V" && productType == nameof(IfcWall))
                 return true;
 
             return false;

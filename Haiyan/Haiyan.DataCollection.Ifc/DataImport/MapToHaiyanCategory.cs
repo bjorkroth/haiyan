@@ -8,25 +8,23 @@ namespace Haiyan.DataCollection.Ifc.DataImport
 {
     public class MapToHaiyanCategory
     {
-        private readonly IfcStore _model;
         private readonly IMaterialBuilder _materialBuilder;
 
-        public MapToHaiyanCategory(IfcStore model, IMaterialBuilder materialBuilder)
+        public MapToHaiyanCategory(IMaterialBuilder materialBuilder)
         {
-            _model = model;
             _materialBuilder = materialBuilder;
         }
 
-        public IEnumerable<HaiyanBuildingElement> MapToCategory(IEnumerable<IIfcProduct> modelObjects)
+        public IEnumerable<HaiyanBuildingElement> MapToCategory(IfcStore model, IEnumerable<IIfcProduct> modelObjects)
         {
             var modelElementMapper = new List<IModelElementMapper>
             {
-                new WallModelElementMapper(_model, _materialBuilder),
-                new SlabModelElementMapper(_model, _materialBuilder),
-                new BeamModelElementMapper(_model, _materialBuilder),
-                new ColumnModelElementMapper(_model, _materialBuilder),
-                new RoofModelElementMapper(_model, _materialBuilder),
-                new ProxyModelElementMapper(_model, _materialBuilder),
+                new WallModelElementMapper(model, _materialBuilder),
+                new SlabModelElementMapper(model, _materialBuilder),
+                new BeamModelElementMapper(model, _materialBuilder),
+                new ColumnModelElementMapper(model, _materialBuilder),
+                new RoofModelElementMapper(model, _materialBuilder),
+                new ProxyModelElementMapper(model, _materialBuilder),
             };
 
             foreach (var modelObject in modelObjects)

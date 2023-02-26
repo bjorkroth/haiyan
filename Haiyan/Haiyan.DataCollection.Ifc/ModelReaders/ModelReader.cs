@@ -7,19 +7,21 @@ using Xbim.ModelGeometry.Scene;
 
 namespace Haiyan.DataCollection.Ifc.ModelReaders
 {
-    public class ModelReader : IModelReader
+    public class ModelReader : IModelReader, IDisposable
     {
+        private readonly IList<IDisposable> _disposableObjects;
+
+        public ModelReader()
+        {
+            _disposableObjects = new List<IDisposable>();
+        }
+
         public IEnumerable<HaiyanBuildingElement> Read(string filePath)
         {
-            //filePath = @"C:\Files\Haiyan_IFC\V-57-V-50302030400-QTO.ifc";
-            //filePath = @"C:\Files\Haiyan_IFC\V-57-V-70022000.ifc";
-            filePath = @"C:\Files\Haiyan_IFC\KP-23-V-70022000.ifc";
-            //filePath = @"C:\Files\Haiyan_IFC\K-20-V-70025000.ifc";
-            //filePath = @"C:\Files\Haiyan_IFC\K-20-V-70098000.ifc";
-            //filePath = @"C:\Files\Haiyan_IFC\FS-K-20-V-7000.ifc";
-            //filePath = @"C:\Files\Haiyan_IFC\K-20-V-10060000.ifc";
+            var model = IfcStore.Open(filePath);
 
-            using var model = IfcStore.Open(filePath);
+            _disposableObjects.Add(model);
+        
             var context = new Xbim3DModelContext(model);
             context.CreateContext();
 
@@ -31,6 +33,7 @@ namespace Haiyan.DataCollection.Ifc.ModelReaders
             var materialLayerBuilder = new MaterialLayerBuilder(model);
             var materialLayerListBuilder = new MaterialLayerListBuilder(materialLayerBuilder);
             var materialBuilder = new MaterialBuilder(materialLayerListBuilder);
+            var mapper = new MapToHaiyanCategory(materialBuilder);
 
             //TODO: Not enumerate all objects to list
             var objects = model.Instances.OfType<IIfcProduct>().ToList();
@@ -40,8 +43,15 @@ namespace Haiyan.DataCollection.Ifc.ModelReaders
                 return Enumerable.Empty<HaiyanBuildingElement>();
             }
 
-            var mapper = new MapToHaiyanCategory(model,materialBuilder);
-            return mapper.MapToCategory(objects);
+            return mapper.MapToCategory(model, objects);
+        }
+
+        public void Dispose()
+        {
+            foreach (var disposableObject in _disposableObjects)
+            {
+                disposableObject.Dispose();
+            }
         }
     }
 }
